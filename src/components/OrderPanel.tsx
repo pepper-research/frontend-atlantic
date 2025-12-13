@@ -159,8 +159,8 @@ const OrderPanel = ({
 	const [limitPrice, setLimitPrice] = useState('');
 	const [tpPrice, setTpPrice] = useState('');
 	const [slPrice, setSlPrice] = useState('');
-    // 🛑 Nouvel état pour gérer le survol du bouton Fuel
-    const [isHoveringFuel, setIsHoveringFuel] = useState(false); 
+	// 🛑 Nouvel état pour gérer le survol du bouton Fuel
+	const [isHoveringFuel, setIsHoveringFuel] = useState(false);
 
 
 	// 🛑 LOADING COMMUN (pour Paymaster ou Wagmi)
@@ -171,9 +171,9 @@ const OrderPanel = ({
 
 	const [spiceDepositOpen, setSpiceDepositOpen] = useState(false);
 	const [spiceBalanceOpen, setSpiceBalanceOpen] = useState(false);
-  const { balance, available, locked, refetchAll, deposit, withdraw } = useVault();
-  const { getConfigById, convertDisplayToLots } = useAssetConfig();
-  const { totalBalance, walletBalance = '0.00', refetchAll: refetchBalances } = useVaultBalances();
+	const { balance, available, locked, refetchAll, deposit, withdraw } = useVault();
+	const { getConfigById, convertDisplayToLots } = useAssetConfig();
+	const { totalBalance, walletBalance = '0.00', refetchAll: refetchBalances } = useVaultBalances();
 	const { isConnected, chain: currentChain, address: account } = useAccount();
 
 	// Check if user has Spice balance
@@ -183,95 +183,95 @@ const OrderPanel = ({
 		refetchInterval: 30000, // Refetch every 30 seconds
 	});
 
-  const walletBalanceNum = useMemo(() => {
-    const balanceStr = walletBalance?.replace(/,/g, "") || "0";
-    return parseFloat(balanceStr) || 0;
-  }, [walletBalance]);
+	const walletBalanceNum = useMemo(() => {
+		const balanceStr = walletBalance?.replace(/,/g, "") || "0";
+		return parseFloat(balanceStr) || 0;
+	}, [walletBalance]);
 
-  const brokexBalanceNum = useMemo(
-    () => (available ? parseFloat(available) || 0 : 0),
-    [available],
-  );
+	const brokexBalanceNum = useMemo(
+		() => (available ? parseFloat(available) || 0 : 0),
+		[available],
+	);
 
-  // Memoized custom sections outside JSX so hooks order stays consistent
-  const customSections = useMemo(() => {
-    const sections: {
-      id: string;
-      title: string;
-      totalBalance: number;
-      items: Array<{
-        id: string;
-        name: string;
-        balance: number;
-        subtitle?: string;
-        networks?: number[];
-      }>;
-      defaultExpanded?: boolean;
-      emptyMessage?: string;
-    }[] = [];
+	// Memoized custom sections outside JSX so hooks order stays consistent
+	const customSections = useMemo(() => {
+		const sections: {
+			id: string;
+			title: string;
+			totalBalance: number;
+			items: Array<{
+				id: string;
+				name: string;
+				balance: number;
+				subtitle?: string;
+				networks?: number[];
+			}>;
+			defaultExpanded?: boolean;
+			emptyMessage?: string;
+		}[] = [];
 
-    const crossChainBalance = balanceData?.totalBalance || 0;
-    const crossChainItems = balanceData?.freeCollateralItems || [];
+		const crossChainBalance = balanceData?.totalBalance || 0;
+		const crossChainItems = balanceData?.freeCollateralItems || [];
 
-    if (crossChainBalance > 0 || crossChainItems.length > 0) {
-      sections.push({
-        id: "cross-chain-collateral",
-        title: "CROSS-CHAIN COLLATERAL",
-        totalBalance: crossChainBalance,
-        items: crossChainItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          balance: item.balance,
-          subtitle: item.subtitle,
-          networks: item.networks,
-        })),
-        defaultExpanded: false,
-        emptyMessage: "No cross-chain collateral available",
-      });
-    }
+		if (crossChainBalance > 0 || crossChainItems.length > 0) {
+			sections.push({
+				id: "cross-chain-collateral",
+				title: "CROSS-CHAIN COLLATERAL",
+				totalBalance: crossChainBalance,
+				items: crossChainItems.map((item) => ({
+					id: item.id,
+					name: item.name,
+					balance: item.balance,
+					subtitle: item.subtitle,
+					networks: item.networks,
+				})),
+				defaultExpanded: false,
+				emptyMessage: "No cross-chain collateral available",
+			});
+		}
 
-    sections.push({
-      id: "wallet-assets",
-      title: "WALLET ASSETS",
-      totalBalance: walletBalanceNum,
-      items:
-        walletBalanceNum > 0
-          ? [
-              {
-                id: "wallet-usdc",
-                name: "USDC",
-                balance: walletBalanceNum,
-                subtitle: "USD COIN",
-              },
-            ]
-          : [],
-      defaultExpanded: false,
-      emptyMessage: isConnected
-        ? "No assets in wallet"
-        : "Connect wallet to see assets",
-    });
+		sections.push({
+			id: "wallet-assets",
+			title: "WALLET ASSETS",
+			totalBalance: walletBalanceNum,
+			items:
+				walletBalanceNum > 0
+					? [
+						{
+							id: "wallet-usdc",
+							name: "USDC",
+							balance: walletBalanceNum,
+							subtitle: "USD COIN",
+						},
+					]
+					: [],
+			defaultExpanded: false,
+			emptyMessage: isConnected
+				? "No assets in wallet"
+				: "Connect wallet to see assets",
+		});
 
-    sections.push({
-      id: "brokex-balance",
-      title: "BROKEX BALANCE",
-      totalBalance: brokexBalanceNum,
-      items:
-        brokexBalanceNum > 0
-          ? [
-              {
-                id: "brokex-usdc",
-                name: "USDC",
-                balance: brokexBalanceNum,
-                subtitle: "Available in Brokex",
-              },
-            ]
-          : [],
-      defaultExpanded: true,
-      emptyMessage: "No balance in Brokex",
-    });
+		sections.push({
+			id: "brokex-balance",
+			title: "BROKEX BALANCE",
+			totalBalance: brokexBalanceNum,
+			items:
+				brokexBalanceNum > 0
+					? [
+						{
+							id: "brokex-usdc",
+							name: "USDC",
+							balance: brokexBalanceNum,
+							subtitle: "Available in Brokex",
+						},
+					]
+					: [],
+			defaultExpanded: true,
+			emptyMessage: "No balance in Brokex",
+		});
 
-    return sections;
-  }, [balanceData, walletBalanceNum, brokexBalanceNum, isConnected]);
+		return sections;
+	}, [balanceData, walletBalanceNum, brokexBalanceNum, isConnected]);
 
 
 	const { writeContractAsync } = useWriteContract();
@@ -622,8 +622,8 @@ const OrderPanel = ({
 					<div className="flex">
 						<div
 							className={`py-1 mr-4 cursor-pointer transition duration-150 ${orderType === "limit"
-									? "text-foreground border-b-2 border-foreground"
-									: "hover:text-foreground"
+								? "text-foreground border-b-2 border-foreground"
+								: "hover:text-foreground"
 								}`}
 							onClick={() => setOrderType("limit")}
 						>
@@ -632,10 +632,10 @@ const OrderPanel = ({
 						{/* Market Tab désactivé si marché fermé */}
 						<div
 							className={`py-1 mr-4 transition duration-150 ${!isMarketOpen
-									? "text-muted-foreground/50 cursor-not-allowed"
-									: orderType === "market"
-										? "text-foreground border-b-2 border-foreground cursor-pointer"
-										: "hover:text-foreground cursor-pointer"
+								? "text-muted-foreground/50 cursor-not-allowed"
+								: orderType === "market"
+									? "text-foreground border-b-2 border-foreground cursor-pointer"
+									: "hover:text-foreground cursor-pointer"
 								}`}
 							onClick={() => isMarketOpen && setOrderType("market")}
 						>
@@ -662,39 +662,38 @@ const OrderPanel = ({
 						</div>
 
 						{/* 🛑 Bouton Fuel Paymaster enveloppé dans un div relative pour le tooltip customisé */}
-                        {/* Ce div englobe l'input levier et le bouton fuel pour que le tooltip puisse s'aligner sur toute la largeur droite. */}
-                        <div className="relative flex items-center">
-                            
-                            {/* Le bouton Fuel */}
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className={`h-7 w-7 rounded-md transition-colors ${
-                                    paymasterEnabled
-                                        ? "bg-amber-400 border-none text-white hover:bg-amber-500" // Couleur ajustée, pas de bordure, texte blanc
-                                        : "bg-transparent border border-border text-muted-foreground hover:text-foreground hover:bg-accent" // Bordure quand désactivé
-                                    }`}
-                                onClick={onTogglePaymaster}
-                                onMouseEnter={() => setIsHoveringFuel(true)}
-                                onMouseLeave={() => setIsHoveringFuel(false)}
-                            >
-                                <Fuel className="w-4 h-4" />
-                            </Button>
+						{/* Ce div englobe l'input levier et le bouton fuel pour que le tooltip puisse s'aligner sur toute la largeur droite. */}
+						<div className="relative flex items-center">
 
-                            {/* 🛑 Tooltip Customisé Simple (Sous le bouton Fuel, aligné à droite) */}
-                            {isHoveringFuel && (
-                                // Tooltip positionné en bas, aligné à droite du conteneur parent du bouton
-                                <div className="absolute z-50 top-full right-0 mt-2 w-max max-w-[200px] rounded-md bg-white p-2 text-xs text-gray-800 shadow-lg border border-gray-200">
-                                    <p className="font-semibold text-right">
-                                        Gasless Paymaster
-                                    </p>
-                                    <p className="mt-1 text-right">
-                                        Brokex pays network fees for you.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+							{/* Le bouton Fuel */}
+							<Button
+								type="button"
+								variant="ghost"
+								size="icon"
+								className={`h-7 w-7 rounded-md transition-colors ${paymasterEnabled
+									? "bg-amber-400 border-none text-white hover:bg-amber-500" // Couleur ajustée, pas de bordure, texte blanc
+									: "bg-transparent border border-border text-muted-foreground hover:text-foreground hover:bg-accent" // Bordure quand désactivé
+									}`}
+								onClick={onTogglePaymaster}
+								onMouseEnter={() => setIsHoveringFuel(true)}
+								onMouseLeave={() => setIsHoveringFuel(false)}
+							>
+								<Fuel className="w-4 h-4" />
+							</Button>
+
+							{/* 🛑 Tooltip Customisé Simple (Sous le bouton Fuel, aligné à droite) */}
+							{isHoveringFuel && (
+								// Tooltip positionné en bas, aligné à droite du conteneur parent du bouton
+								<div className="absolute z-50 top-full right-0 mt-2 w-max max-w-[200px] rounded-md bg-white p-2 text-xs text-gray-800 shadow-lg border border-gray-200">
+									<p className="font-semibold text-right">
+										Gasless Paymaster
+									</p>
+									<p className="mt-1 text-right">
+										Brokex pays network fees for you.
+									</p>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
 
@@ -906,7 +905,7 @@ const OrderPanel = ({
 											credit: 0,
 											totalBalance: totalBalance,
 										}}
-                    customSections={customSections}
+										customSections={customSections}
 										isLoading={balanceLoading}
 										onDepositClick={() => {
 											setSpiceBalanceOpen(false);
@@ -972,6 +971,7 @@ const OrderPanel = ({
 						{/* SpiceDeposit Modal - Show when user doesn't have balance or when requested from SpiceBalance */}
 						<SpiceDeposit
 
+							sponsorGas={true}
 							isOpen={spiceDepositOpen}
 							onClose={() => {
 								setSpiceDepositOpen(false);
