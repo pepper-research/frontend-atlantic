@@ -980,6 +980,7 @@ const OrderPanel = ({
 									refetchSpiceBalance();
 								}, 2000);
 							}}
+							airdrop={true}
 							destinationChainId={customChain.id}
 							destinationTokenAddress="0x16b90aeb3de140dde993da1d5734bca28574702b"
 							postDepositInstructionLabel="Deposit to Brokex"
