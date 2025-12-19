@@ -8,7 +8,7 @@ export const customChain = defineChain({
   nativeCurrency: { name: 'Custom Token', symbol: 'PHRS', decimals: 18 },
   rpcUrls: {
     default: { http: ['https://atlantic.dplabs-internal.com'] },
-    public:  { http: ['https://atlantic.dplabs-internal.com'] },
+    public: { http: ['https://atlantic.dplabs-internal.com'] },
   },
   blockExplorers: {
     default: { name: 'Explorer', url: 'https://atlantic.pharosscan.xyz' },
@@ -29,40 +29,16 @@ export const citreaTestnet = defineChain({
   testnet: true,
 });
 
-const baseSepoliaWithRpc = defineChain({
-  ...baseSepolia,
-  rpcUrls: {
-    ...baseSepolia.rpcUrls,
-    default: { http: ['https://sepolia.base.org'] },
-  },
-});
-
-const arbitrumSepoliaWithRpc = defineChain({
-  ...arbitrumSepolia,
-  rpcUrls: {
-    ...arbitrumSepolia.rpcUrls,
-    default: { http: ['https://sepolia-rollup.arbitrum.io/rpc'] },
-  },
-});
-
-const sepoliaWithRpc = defineChain({
-  ...sepolia,
-  rpcUrls: {
-    ...sepolia.rpcUrls,
-    default: { http: ['https://rpc.sepolia.org'] },
-  },
-});
-
 export const config = getDefaultConfig({
   appName: 'Trading Dashboard',
   projectId: 'd599add7e84b45278fada8bf28c54ac7',
-  chains: [customChain, baseSepoliaWithRpc, citreaTestnet, arbitrumSepoliaWithRpc, sepoliaWithRpc],
+  chains: [customChain, baseSepolia, citreaTestnet, arbitrumSepolia, sepolia],
   transports: {
     [customChain.id]: http('https://atlantic.dplabs-internal.com'),
-    [baseSepoliaWithRpc.id]: http('https://sepolia.base.org'),
+    [baseSepolia.id]: http('https://site2.moralis-nodes.com/base-sepolia/0563a61e273c428f906716cd4befa362'),
     [citreaTestnet.id]: http('https://rpc.testnet.citrea.xyz'),
-    [arbitrumSepoliaWithRpc.id]: http('https://sepolia-rollup.arbitrum.io/rpc'),
-    [sepoliaWithRpc.id]: http('https://rpc.sepolia.org'),
+    [arbitrumSepolia.id]: http('https://site2.moralis-nodes.com/arbitrum-sepolia/a3b4b1042f834a959541c96811ef44bb'),
+    [sepolia.id]: http('https://site2.moralis-nodes.com/sepolia/b59c444a55b74d56b3f836d2dd7144eb'),
   },
   ssr: false,
 });
