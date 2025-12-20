@@ -484,7 +484,7 @@ const OrderPanel = ({
 
 				if (orderType === 'limit') {
 					const targetX6 = Math.round(numLimitPrice * 1000000);
-
+					
 					txHash = await writeContractAsync({
 						address: TRADING_ADDRESS,
 						abi: TRADING_ABI,
@@ -565,6 +565,18 @@ const OrderPanel = ({
 				),
 				duration: 5000,
 			});
+
+			if (txHash && account) {
+				logTransaction({
+					address: account,
+					txHash: txHash as Hash,
+					actionType: orderType === 'limit' 
+						? (longSide ? 'LIMIT_BUY' : 'LIMIT_SELL')
+						: (longSide ? 'MARKET_BUY' : 'MARKET_SELL'),
+					venue: 'BROKEX',
+					chainId: customChain.id,
+				});
+			}
 
 			// Réinitialisation de l'interface
 			setLimitPrice(currentPrice.toFixed(priceDecimals));
